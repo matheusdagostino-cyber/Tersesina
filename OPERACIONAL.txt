@@ -1,0 +1,91 @@
+OPERACIONAL.md — Guia de Uso do Agente no Claude Code 
+Estrutura de Diretórios Recomendada 
+projeto-licitacao/ +-- CLAUDE.md . System prompt do agente (obrigatório na raiz) +-- OPERACIONAL.md . Este arquivo +-- edital/ ¦ +-- edital-principal.pdf ¦ +-- anexo-I-TR.pdf ¦ +-- anexo-II-planilha.xlsx ¦ +-- anexo-III-minuta-contrato.pdf ¦ +-- anexo-IV-matriz-riscos.pdf ¦ +-- ... +-- docs-nossos/ . Modo --self ¦ +-- habilitacao/ ¦ ¦ +-- contrato-social.pdf ¦ ¦ +-- cnds/ ¦ ¦ +-- atestados/ ¦ ¦ +-- balancos/ ¦ +-- proposta-tecnica/ ¦ +-- proposta-preco/ +-- docs-concorrente/ . Modo --adversarial ¦ +-- habilitacao/ ¦ +-- proposta-tecnica/ ¦ +-- proposta-preco/ +-- outputs/ ¦ +-- mapa-requisitos.md ¦ +-- relatorio-autoauditoria.md ¦ +-- relatorio-adversarial.md ¦ +-- minuta-impugnacao.docx ¦ +-- checklist-envelope.md +-- jurisprudencia/ 
++-- [acórdãos baixados para referência] 
+
+Sequência de Comandos — Sessão Tipo 
+Passo 1: Iniciar o Claude Code no diretório do projeto 
+cd projeto-licitacao claude 
+O Claude Code lerá automaticamente o CLAUDE.md da raiz. 
+Passo 2: Configurar a sessão 
+Sessão de análise: 
+-Modo: --self 
+-Edital: edital/edital-principal.pdf + edital/anexo-I-TR.pdf 
+-Documentos: docs-nossos/habilitacao/ 
+-Modalidade: concorrência 
+-Objeto: concessão 
+-Jurisdição: TCE-BA 
+Comece pela Fase 1 — extraia o edital e construa o Mapa de Requisitos. Salve o mapa em outputs/mapa-requisitos.md. 
+Passo 3: Revisão do Mapa de Requisitos 
+Revise o mapa em outputs/mapa-requisitos.md. Há requisitos que ficaram de fora? Confira especialmente: 
+-Exigências enterradas nos anexos (TR, minuta de contrato) 
+-Condições de participação implícitas (ex: exigência de LO de aterro na minuta de contrato que não aparece no capítulo de habilitação) 
+Passo 4: Confronto documental 
+Agora execute a Fase 2 — confronto documental. Compare cada requisito do mapa com os documentos em docs-nossos/habilitacao/. Salve o resultado em outputs/relatorio-autoauditoria.md. 
+Passo 5: Aprofundamento seletivo 
+Aprofunde os itens QT-02, QT-05 e QEF-03. Para QT-02: busque na web jurisprudência do TCE-BA sobre exigência de quantitativo mínimo em atestados de coleta de RSU. Para QT-05: verifique se LI emitida em nome de terceiro é admissível em licitação de concessão. 
+Passo 6: Geração de peça (quando aplicável) 
+Com base nas irregularidades QT-02, QT-05 e CONS-06 do relatório adversarial, gere minuta de recurso administrativo contra habilitação da concorrente. Formato .docx. Salve em outputs/minuta-recurso.docx. Estrutura: 
+I. Tempestividade (art. 165 §1º Lei 14.133/2021 — prazo de [X] dias úteis) 
+II. Breve síntese fática 
+III. Das razões recursais
+ III.1 [QT-02] — Da insuficiência dos atestados técnico-operacionais
+ III.2 [QT-05] — Da irregularidade da licença ambiental
+ III.3 [CONS-06] — Da desproporcionalidade na soma de atestados do consórcio 
+IV. Do pedido 
+
+Cenários de Uso Frequentes 
+Cenário A: Edital publicado, fase de análise para decisão go/no-go 
+Modo: --self (preventivo) Objetivo: Identificar se o grupo consegue atender todos os requisitos antes de decidir participar. 
+Foco: Habilitação técnica (atestados disponíveis vs. exigidos), qualificação econômico-financeira (índices, PL), licenciamento ambiental (licenças disponíveis). 
+Output: Relatório semáforo + lista de gaps com viabilidade de correção. 
+
+Cenário B: Após sessão pública, análise da documentação do vencedor 
+Modo: --adversarial Objetivo: Identificar irregularidades na habilitação ou proposta do
+ primeiro colocado para fundamentar recurso. Foco: Tudo que justifique inabilitação ou desclassificação. Prazo: Atenção ao prazo recursal (art. 165 §1º Lei 14.133 — verificar
+ se o edital tem prazo próprio). Output: Relatório de irregularidades + minuta de recurso. 
+
+Cenário C: Credenciamento com múltiplos credenciados 
+Modo: --adversarial (contra credenciados habilitados irregularmente) + --self (verificação própria) 
+Foco adicional: art. 79 Lei 14.133/2021 — critérios de distribuição de demanda, parallelismo entre credenciados, vedação de preferência na alocação. 
+Output: Relatório + minuta de impugnação (se pré-habilitação) ou representação ao TCE (se pós-contratação). 
+
+Cenário D: PPP/Concessão — análise da minuta contratual 
+Modo: --self (análise de riscos no contrato proposto pelo Poder Concedente) 
+Foco adicional: matriz de riscos (art. 22 Lei 11.079), alocação de riscos (demanda, cambial, ambiental, regulatório, financiamento), mecanismo de reequilíbrio, indicadores de desempenho, step-in rights, garantias públicas. 
+Output: Matriz de riscos comentada + relatório de cláusulas críticas. 
+
+
+Parâmetros de Qualidade — Autoverificação do Agente 
+Antes de entregar qualquer output, o agente deve passar por esta checklist interna: 
+[ ] Todo dispositivo legal citado tem número, artigo e inciso completos? [ ] Todo acórdão citado está marcado como [VERIFICADO] ou [VERIFICAR]? [ ] Nenhum nome empresarial do grupo aparece no output? [ ] O output é reutilizável (salvo em arquivo, formatado, com campos variáveis)? [ ] Lacunas de informação estão explícitas, não preenchidas com suposições? [ ] Para modo --adversarial: cada tese tem contra-argumento previsto? [ ] Para modo --self: cada fragilidade tem ação corretiva recomendada? [ ] O escopo está estrito ao que o documento diz (sem extrapolação)?[ ] Teses NÃO estão classificadas como forte/fraca/razoável? 
+
+Atalhos de Comando 
+Atalho  Ação  
+/mapa  Gerar/atualizar Mapa de Requisitos  
+/check  Checklist rápido presença/ausência (Prompt 4)  
+/deep [ID]  Aprofundar item específico com busca jurisprudencial  
+
+/minuta [tipo]  Gerar minuta (impugnacao / recurso / representacao / parecer)  
+/compare  Comparativo de propostas (Prompt 5)  
+/resumo  Resumo executivo do status atual da análise  
+/riscos  Análise focada em matriz de riscos (PPP/concessão)  
+/planilha  Análise focada em planilha de custos/BDI  
+
+
+Observações Finais 
+1. 
+O CLAUDE.md não substitui o advogado. O agente identifica, organiza e fundamenta. A decisão estratégica (impugnar ou não, qual tese priorizar, como calibrar o tom da peça) é sempre do operador. 
+
+2. 
+Atualização contínua. Conforme novas decisões do TCU/TCE ou alterações legislativas surgirem, atualizar a seção de legislação-base e parâmetros setoriais do CLAUDE.md. 
+
+3. 
+Versionamento. Manter o CLAUDE.md versionado no repositório do projeto. Cada edital relevante deve ter seu próprio diretório com os outputs preservados. 
+
+4. 
+Integração com workflow existente. Este agente opera na etapa de análise do fluxo iterativo: (1) pesquisa ampla . (2) discussão crítica . (3) entregável. O agente cobre (1) e parte de (3). A etapa (2) é a interação direta entre o agente e o operador. 
+
+
+
+
